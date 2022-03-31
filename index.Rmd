@@ -1,0 +1,81 @@
+---
+title: "Advanced Dashboarding"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: row
+    vertical_layout: fill
+    social: ["menu"]
+    source_code: embed
+    theme:
+      version: 4
+      bootswatch: sandstone
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(palmerpenguins)
+library(plotly)
+library(DT)
+library(fontawesome)
+data("penguins")
+```
+
+
+Plots {data-navmenu="Pages"}
+=======================================================================
+
+Sidebar {.sidebar}
+-----------------------------------------------------------------------
+
+### Penguin Stats
+
+The number of penguins in the data is `r nrow(penguins)`
+
+Row
+----------------------------------------------------------------------
+
+### Number of penguins
+
+```{r}
+valueBox(nrow(penguins), icon = "fa-linux")
+```
+
+
+Column {.tabset}
+-----------------------------------------------------------------------
+
+### Scatter plot of bill length vs bill depth
+
+```{r}
+a = penguins %>% ggplot(aes(x = bill_length_mm, y = bill_depth_mm, color = species))+
+  geom_point()
+ggplotly(a)
+```
+
+
+
+### Chart B
+
+```{r}
+penguins %>% ggplot(aes(x = body_mass_g, y = sex, fill = sex))+
+  geom_boxplot()
+```
+
+### Chart C
+
+```{r}
+penguins %>% ggplot(aes(x = flipper_length_mm, fill = species))+
+  geom_histogram()+
+  facet_wrap(~species)
+```
+
+Data {data-navmenu="Pages"}
+=================================================================
+
+```{r}
+penguins %>% datatable(extensions = "Buttons",
+                       options = list(dom = "Blfrtip",
+                                      buttons = c("copy", "csv", "excel", "pdf", "print")))
+```
+
